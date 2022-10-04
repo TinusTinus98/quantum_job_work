@@ -55,9 +55,11 @@ df2 = df2.sort_values(by=["quantity"], ascending=False)
 number = df2["quantity"].sum()
 print(df2)
 X = [x for x in range(np.shape(df["Country"].unique())[0])]
-Y = df2["quantity"] / number * 100
+Y = df2["quantity"]
+print(number)
 labels = df2["Country"]
 plt.bar(X, Y)
+plt.title("location plot (150 job posts)")
 plt.xticks(X, labels)
 plt.xticks(fontsize=8, rotation=0)
 plt.show()
