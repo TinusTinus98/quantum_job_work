@@ -5,12 +5,12 @@ import pickle
 
 embedder = SentenceTransformer("bert-base-nli-mean-tokens")
 
-
 df = pd.read_csv("data/data_onetonline/detailed_work_activities.csv")
+
 jobs_names = pd.read_csv(
     "data/data_onetonline/jobs_metadata.csv", usecols=["code", "job_name"]
 )
-# print(df)
+
 work_activities = {}
 for job_code in df["code"].unique():
     activities = df[df["code"] == job_code]["detailed_work_activity"].values
@@ -25,7 +25,6 @@ official_embeddings = embedder.encode(official)
 
 
 scrapped_df = pd.read_csv("data/scrapped_data/LIX_quantum_185900.csv")
-
 scrapped_work_activities = dict(
     zip(scrapped_df["Description"].values, scrapped_df["Title"].values)
 )

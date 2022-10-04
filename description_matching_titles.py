@@ -8,15 +8,12 @@ import pickle
 jobs_names = pd.read_csv(
     "data/data_onetonline/jobs_metadata.csv", usecols=["code", "job_name"]
 )
-infile = open("pickle_files/scrapped_work_activities.p", "rb")
-scrapped_work_activities = pickle.load(infile)
+infile = open("pickle_files/scrapped_embeddings.p", "rb")
+scrapped_embeddings = pickle.load(infile)
 infile.close()
-# infile = open("pickle_files/scrapped_embeddings.p", "rb")
-# scrapped_embeddings = pickle.load(infile)
-# infile.close()
-# infile = open("pickle_files/work_activities.p", "rb")
-# work_activities = pickle.load(infile)
-# infile.close()
+infile = open("pickle_files/scrapped.p", "rb")
+scrapped = pickle.load(infile)
+infile.close()
 infile = open("pickle_files/official_embeddings.p", "rb")
 official_embeddings = pickle.load(infile)
 infile.close()
@@ -33,27 +30,22 @@ print(index.is_trained)
 print(index.ntotal)  # print the number of vector
 
 res = []
-for query in zip(scrapped_work_activities):
+i = 0
+for query, query_embedding in zip(scrapped, scrapped_embeddings):
     k = 1  # return 3 nearest neighbours
-    distances, indices = index.search(np.asarray(query).reshape(1, 768), k)
-    # print("\n======================\n")
-    # print("Query:", query)
-    # print("\nTop 5 most similar sentences in corpus:")
+    distances, indices = index.search(np.asarray(query_embedding).reshape(1, 768), k)
     for idx in range(0, k):
         # print(official[indices[0, idx]], "(Distance: %.4f)" % distances[0, idx])
-        job_name = work_activities[official[indices[0, idx]]]
+        job_name = official["job_name"][indices[0, idx]]
+        match_code = official["code"][indices[0, idx]]
         res.append(
             {
-                "scrapped_jobs": scrapped_work_activities[query],
+                "scrapped_jobs": query,
                 "official_match_title": job_name,
-                "match_code": jobs_names[jobs_names["job_name"] == job_name][
-                    "code"
-                ].values[0],
+                "match_code": match_code,
                 "distance": distances[0, idx],
             }
         )
+    i += 1
 df = pd.DataFrame(res)
-df.to_csv("./matching_BERT_faiss_onet_lix_1.csv")
-
-
-print()
+df.to_csv("data/matching_bert/matching_BERT_faiss_onet_title_1.csv")

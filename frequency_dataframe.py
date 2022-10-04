@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 matchs = pd.read_csv(
-    "data/matching_bert/matching_BERT_faiss_onet_lix_1.csv"
+    "data/matching_bert/matching_BERT_faiss_onet_title_1.csv"
 )  # ,usecols=["code", "job_name"]
 print(matchs)
 
@@ -17,4 +17,4 @@ for code in matchs["match_code"].unique():
     )
 
 df = pd.DataFrame(res)
-df.to_csv("./frequency_dataframe.csv")
+df.to_csv("data/frequency_dataframe_title.csv")

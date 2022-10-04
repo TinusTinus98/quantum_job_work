@@ -2,10 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-stats = pd.read_csv("frequency_dataframe.csv")  # ,usecols=["code", "job_name"]
+stats = pd.read_csv(
+    "data/frequency_dataframe_title.csv"
+)  # ,usecols=["code", "job_name"]
 
 number_jobs = stats["quantity"].sum()
-stats = stats[stats["quantity"] > 1]
+stats = stats[stats["quantity"] > 2]
 # print(stats)
 name_fig = "fig"
 path_plot = ""
@@ -13,7 +15,7 @@ path_plot = ""
 
 #### gathering R&D jobs--------------------------
 new_job_name = []
-rd_target = ["Astronomers", "Materials Scientists", "Physicists"]
+rd_target = []  # "Astronomers", "Materials Scientists", "Physicists"
 quantity = 0
 for x in stats["job_name"].values:
     if x in rd_target:
@@ -26,7 +28,7 @@ stats = stats[stats["new_job_name"] != "RD"]
 stats = stats[["quantity", "new_job_name"]]
 print(stats)
 
-stats = stats.append({"quantity": quantity, "new_job_name": "RD"}, ignore_index=True)
+# stats = stats.append({"quantity": quantity, "new_job_name": "RD"}, ignore_index=True)
 stats["quantity"] = stats["quantity"] / number_jobs * 100
 stats = stats.sort_values(by=["quantity"], ascending=False)
 print(stats)
@@ -53,7 +55,7 @@ X = [i for i in range(len(Y))]
 
 plt.bar(X, Y)
 plt.xticks(X, labels)
-plt.xticks(fontsize=8, rotation=0)
+plt.xticks(fontsize=8, rotation=25)
 plt.show()
 
 
