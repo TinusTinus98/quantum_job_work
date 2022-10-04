@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html class="mdf" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="google-site-verification" content="Ty_uddsUiim55tteitR4CBf-iS7L7IrBrz_Aqt0hyF4" />
+  <title>
+    Recruitment
+  </title>
+  <script src="https://unpkg.com/core-js-bundle"></script>
+  <script src="https://unpkg.com/whatwg-fetch"></script>
+  <style>
+    #recPageLoadWaitingIndicator {
+      display: flex;
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      left: 0;
+      top: 0;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      padding-top: 50px;
+      color: #1a8099;
+    }
+  </style>
+</head>
+
+<body role="main" class="recruitment-body mdf">
+  <script>
+    window.onload = function () {
+      checkBrowserSupport("recruitment_root");
+    };
+    try {
+      window.document.domain = "adp.com";
+      if (!window['wfnCdnPath']) {
+        let currentPage = document.location.href;
+        let isProduction = currentPage.indexOf('workforcenow.adp.com') > -1 || currentPage.indexOf('wfn-prod-test.adp.com') > -1 || currentPage.indexOf('workforcenow.cloud.adp.com') > -1;
+        let cookies = document.cookie.match(new RegExp('WFNCDN=([^;]+)'));
+        let cdn = cookies && cookies[1] ? cookies[1] : 'wfn';
+        cdn = cdn.toLowerCase();
+        let cdnPath;
+
+        if (cdn === 'myadp') {
+          cdnPath = isProduction ? 'static.adp.com/mas' : 'static-iat.adp.com/mas';
+        }
+        else {
+          cdnPath = isProduction ? 'static.workforcenow.adp.com/mas' : 'static.wfn-iat.adp.com/mas';
+        }
+        window['wfnCdnPath'] = cdnPath;
+      }
+    } catch (e) {
+      console.error("Error while setting domain " + e);
+    }
+
+    // Workaround for Highcharts Error #16
+    if (window.Highcharts) {
+      window.SAVED_Highcharts = window.Highcharts;
+      delete window.Highcharts;
+    }
+
+    (function() {
+      // Dynamic CSS and JS loader
+      const mdfLoader = {
+        cssFiles: [
+          'https://cdn-path/mdf/22.19.15/styles/fonts.css', 'https://cdn-path/mdf/22.19.15/styles/mdf.css', 'https://cdn-path/mdf-components/22.19.21/styles/mdfComponents.css', '/mascsr/default/mdf/recruitment/styles/recruitment.8e08d41542502fa34024.css'
+        ],
+        jsFiles: [
+          'https://cdn-path/mdf/22.19.15/vendor.js', 'https://cdn-path/mdf/22.19.15/mdf.js', 'https://cdn-path/mdf-components/22.19.21/vendor.js', 'https://cdn-path/mdf-components/22.19.21/adp.js', 'https://cdn-path/mdf-components/22.19.21/mdfComponents.js', '/mascsr/default/mdf/recruitment/recruitment.8e08d41542502fa34024.js',
+          "/mascsr/default/mdf/recruitment/config-loader.js",
+          "/mascsr/default/mdf/recruitment/detectizr.min.js",
+          "/mascsr/default/mdf/recruitment/modernizr.min.js",
+          "/mascsr/default/mdf/recruitment/browser.js"
+        ],
+        loadMethods: [],
+        filesLoaded: [],
+        whenFinished: function () { },
+        mdfLoaded: false,
+        cdnPath: window['wfnCdnPath'] || 'static.workforcenow.adp.com/mas',
+        publicPath: 'https://cdn-path',
+        applicationPath: '/mascsr/default/mdf/recruitment',
+
+        resetFileLists: function () {
+          var langMap = {
+            "en_US": "en",
+            "fr_CA": "fr-CA",
+            "es_US": "es-US",
+            "en_CA": "en-CA"
+          };
+          var url = window.location.href;
+          if (url.indexOf('recruitment.html') !== -1) {
+            this.deleteCookie('ADPPORTAL');
+            this.deleteCookie('DType');
+          }
+          var jobId = this.getParameterByName("jobId");
+          var isJobIdChanged = false;
+          if (jobId) {
+            var finalJobId = jobId;
+            if (jobId.includes('@') || jobId.includes('%40')) {
+              finalJobId = jobId.replace(/@|%40/g,'_');
+              if (jobId !== finalJobId) {
+                jobId = encodeURIComponent(jobId);
+                url = url.replace(jobId, finalJobId);
+                isJobIdChanged = true;
+              }
+            }
+          }
+          var ADPlang = this.getParameterByName("lang");
+          var isReloaded = false;
+          // var ADPlang = JSON.parse(window.sessionStorage.getItem("WFNREC")).lang;
+          console.log("adp lang :"+ ADPlang);
+          if (ADPlang) {
+            var tempLang = langMap[ADPlang];
+            if (!tempLang && ADPlang.replace("-", "_").split("_").length > 1) {
+              var finalLang = ADPlang.replace("-", "_").split("_")[0] + "_" + (ADPlang.replace("-", "_").split(
+                "_")[1]).toUpperCase();
+              finalLang = finalLang.replace(/^\s+|\s+$/g, '');
+              if (langMap[finalLang]) {
+                ADPlang = ADPlang.match(/^\s|\s$/) ? encodeURIComponent(ADPlang) : ADPlang;
+                url = url.replace(ADPlang, finalLang);
+                window.location.href = url;
+                isReloaded = true;
+              } else {
+                var first_part = ADPlang.replace("-", "_").split("_")[0];
+                if (first_part.toLowerCase() === 'es') {
+                  url = url.replace(ADPlang, 'es_US');
+                  window.location.href = url;
+                  isReloaded = true;
+                } else if (first_part.toLowerCase() === 'fr') {
+                  url = url.replace(ADPlang, 'fr_CA');
+                  window.location.href = url;
+                  isReloaded = true;
+                }
+              }
+            }
+            if (document.getElementsByTagName('html') && document.getElementsByTagName('html')[0]
+                && !document.getElementsByTagName('html')[0].lang) {
+                  var first_part = ADPlang.replace("-", "_").split("_")[0];
+                  document.getElementsByTagName('html')[0].lang = first_part;
+            }
+            ADPlang = tempLang;
+          }
+          if (!isReloaded && isJobIdChanged) {
+            window.location.href = url;
+          }
+        },
+
+        deleteCookie: function (name) {
+          try {
+            console.log("Delete cookie " + name);
+            var date = new Date();
+            date.setTime(date.getTime() + (-1 * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toUTCString();
+            document.cookie = name + "=" + expires + "; domain=.adp.com; path=/";
+          } catch (e) {
+            console.error('Error while deleting cookie: ' + name + e);
+          }
+        },
+
+        getParameterByName: function (name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
+        },
+
+        startsWith: function(str, prefix) {
+          return str.indexOf(prefix) === 0;
+        },
+
+        endsWith: function(str, suffix) {
+          // Strip off any ./ or ../ at the start of the suffix.
+          const firstSlash = suffix.indexOf('/');
+          suffix = suffix.substring(firstSlash);
+          // Do the comparison
+          return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        },
+
+        hasXHR2: function() {
+          let x = new XMLHttpRequest();
+
+          return (typeof x['addEventListener'] !== 'undefined') && (typeof x['upload'] !== 'undefined');
+        },
+
+        fetchContent: function(url, onLoad, onError) {
+          let xhr = new XMLHttpRequest();
+          xhr.open('GET', url, false);
+
+          if (this.hasXHR2()) {
+            xhr.addEventListener("load", function(event) {
+              let response = event.target;
+
+              if (response.status === 200) {
+                onLoad(response.responseText, response);
+              }
+              else {
+                onError(response);
+              }
+            }, false);
+
+            xhr.addEventListener("error", function(event) {
+              onError(event.target);
+            }, false);
+          }
+          else {
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                  onLoad(xhr.responseText, xhr);
+                }
+                else {
+                  onError(xhr);
+                }
+              }
+            };
+          }
+
+          try {
+            xhr.send();
+          }
+          catch(e) {
+            if ("console" in window) {
+              console.log("xhr.send() error [" + e.message + "]");
+            }
+          }
+        },
+
+        isStyleSheetLoaded: function(url) {
+          let linkTags = document.getElementsByTagName("link");
+          let link;
+
+          for (let i = 0; i < linkTags.length; i++) {
+            link = linkTags[i];
+
+            if (this.endsWith(link.href, url)) {
+              return true;
+            }
+          }
+
+          return false;
+        },
+
+        isScriptLoaded: function(url) {
+          let scriptTags = document.getElementsByTagName("script");
+          let script;
+          let href;
+
+          for (let i = 0; i < scriptTags.length; i++) {
+            script = scriptTags[i];
+            href = script.src;
+
+            if (this.endsWith(href, url)) {
+              return true;
+            }
+          }
+
+          return false;
+        },
+
+        loadStyleSheet: function(url, media) {
+          let sheet = null;
+
+          // We want to load stylesheets under 2 conditions:
+          // 1. The stylesheet has not been loaded before.
+          // 2. The stylesheet is application-specific and needs to be reloaded when we return to the application.
+          if (!this.startsWith(url, this.publicPath) || !this.isStyleSheetLoaded(url)) {
+            console.log('mdfLoader.loadStyleSheet(): LOADING [' + url + ']');
+
+            sheet = document.createElement('link');
+            sheet.type = 'text/css';
+            sheet.rel = 'stylesheet';
+            sheet.href = url;
+
+            if (media) {
+              sheet.media = media;
+            }
+
+            document.head.appendChild(sheet);
+          }
+          else {
+            console.log('mdfLoader.loadStyleSheet(): SKIPPING [' + url + ']');
+          }
+        },
+
+        loadScript: function(url, language, onLoad) {
+          let script = null;
+          let _this = this;
+
+          // We want to load JavaScript files under 2 conditions:
+          // 1. The JavaScript has not been loaded before.
+          // 2. The JavaScript is application-specific and needs to be reloaded when we return to the application.
+          if (!this.startsWith(url, this.publicPath) || !this.isScriptLoaded(url)) {
+            console.log('mdfLoader.loadScript(): LOADING [' + url + ']');
+
+            this.filesLoaded.push(false);
+            let fileIndex = this.filesLoaded.length - 1;
+            script = document.createElement('script');
+
+            script.src = url;
+            script.async = false;
+
+            if (language) {
+              script.type = language;
+            }
+            else {
+              script.type = 'text/javascript';
+            }
+
+            script.onload = function() {
+              _this.filesLoaded[fileIndex] = true;
+
+              if (onLoad) {
+                onLoad(arguments);
+              }
+
+              if (_this.filesLoaded.every(function(item) { return item; })) {
+                _this.whenFinished();
+              }
+            };
+
+            document.head.appendChild(script);
+          }
+          else {
+            console.log('mdfLoader.loadScript(): SKIPPING [' + url + ']');
+          }
+        },
+
+        fixPath: function(path) {
+          return path.replace('cdn-path', this.cdnPath);
+        },
+
+        pageSetup: function() {
+          const isProduction = this.startsWith(this.publicPath, 'https');
+          this.publicPath = this.fixPath(this.publicPath);
+
+          if (!window.process) {
+            window.process = {};
+          }
+
+          if (isProduction) {
+            if (!window.process.env) {
+              window.process.env = {};
+            }
+
+            window.process.env.NODE_ENV = 'production';
+          }
+
+          let _this = this;
+
+          this.cssFiles.forEach(function(file) {
+            const itemUrl = _this.fixPath(file) + '?cid='+ _this.getParameterByName('cid');
+            if (window["dojoConfig"] || window["angular"]) {
+              if (file.indexOf('fonts') < 0) {
+                _this.loadStyleSheet(itemUrl);
+              }
+            }
+            else {
+              _this.loadStyleSheet(itemUrl);
+            }
+          });
+
+          this.jsFiles.forEach(function(file) {
+            const itemUrl = _this.fixPath(file) + '?cid='+ _this.getParameterByName('cid');
+            _this.loadScript(itemUrl);
+          });
+        },
+      };
+
+      mdfLoader.resetFileLists();
+
+        // Code to run when all the scripts have loaded.
+        mdfLoader.whenFinished = function () {
+          if (document.getElementById('recPageLoadWaitingIndicator')) {
+            document.getElementById('recPageLoadWaitingIndicator').style.display = 'none';
+          }
+          if (window.SAVED_Highcharts) {
+            window.Highcharts = window.SAVED_Highcharts;
+          }
+        };
+
+      // Load the CSS and JS files based on the environment.
+      mdfLoader.pageSetup();
+    })();
+  </script>
+  <div>
+    <div id="recruitment_root" class="mdf vdl-container-fluid recruitment recruitment_styles recruitment_root"></div>
+    <div id="recPageLoadWaitingIndicator" class="vdl-busy-indicator vdl-busy-indicator--overlay vdl-busy-indicator--md" style="display: flex;z-index:1000;justify-content: center;align-items: center;left:0;top:0;position:absolute;height: 100%;width: 100%;padding-top: 50px;color:#1a8099;">
+      <svg version="1.1" x="0px" y="0px" width="40" height="40" viewBox="0 0 40 40" class="vdl-busy-indicator__icon"><defs><clipPath id="clipPath"><rect x="0" y="0" width="20" height="20"></rect></clipPath></defs><circle cx="20" cy="20" stroke-width="4" r="18"></circle><circle cx="20" cy="20" stroke-width="4" r="18" clip-path="url(#clipPath)"></circle></svg>
+    </div>
+  </div>
+  <div id='warning-block-wfn' style='display: none'>
+    Please switch to a supported browser listed <a href="https://support.adp.com/pub/paas/login_page/common/en_US/empl/netscr/base/logon/wfn_req.htm">here</a>,
+    or some features may not work correctly.
+  </div>
+  <script type="text/javascript">
+    ! function () {
+      var t = function () {
+        var t = document.createElement("script");
+        t.src = "https://ws.audioeye.com/ae.js", t.type = "text/javascript", t.setAttribute("async", ""), document.getElementsByTagName(
+          "body")[0].appendChild(t)
+      };
+      "complete" !== document.readyState ? window.addEventListener ? window.addEventListener("load", t) : window.attachEvent &&
+        window.attachEvent("onload", t) : t()
+    }()
+  </script>
+</body>
+</html>
