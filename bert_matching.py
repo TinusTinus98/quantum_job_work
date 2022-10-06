@@ -15,7 +15,6 @@ def bert_match(df_official, col_official, df_to_match, col_to_match, k=1):
     )
     return df
 
-
 def faiss_match(
     df_official: pd.DataFrame,
     official_embeddings: pd.DataFrame,

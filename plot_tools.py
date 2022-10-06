@@ -1,8 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.transforms import Affine2D
+import mpl_toolkits.axisartist.floating_axes as floating_axes
+from mpl_toolkits.axisartist.grid_finder import FixedLocator, MaxNLocator, DictFormatter
 
 
-def plot_match(df0, col_labels, name_plot, min_Y=1):
+def plot_match(df0, col_labels, name_plot,limit=10, min_Y=1):
     df = pd.DataFrame(df0[col_labels])
     list_to_gather = []
     df = set_quantity(df, col_labels)
@@ -10,17 +13,20 @@ def plot_match(df0, col_labels, name_plot, min_Y=1):
     print("number : ", df["quantity"].sum())
     df = df[df["quantity"] > min_Y]
     df = df.sort_values(by=["quantity"], ascending=False)
-    labels = remove_space(df[col_labels], limit=8)
+    labels = remove_space(df[col_labels], limit=limit)
     plot_bar(df["quantity"], labels, name_plot)
 
 
 def plot_bar(Y, labels, name_plot):
+    fig = plt.figure(figsize=(8, 4))
+    fig.subplots_adjust(bottom=0.3)
     path_plot = "out/"
     X = [i for i in range(len(Y))]
     plt.bar(X, Y)
     plt.xticks(X, labels)
-    plt.xticks(fontsize=8, rotation=25)
-    plt.savefig(path_plot + name_plot)
+    plt.xticks(fontsize=8, rotation=90)
+    plt.title("BERT matching")
+    # plt.savefig(path_plot + name_plot, dpi=1200)
 
 
 def set_quantity(df: pd.DataFrame, name_col: str):
@@ -48,7 +54,7 @@ def gather(df, quantity_col, col_name, list_name, new_name):
     return df2
 
 
-def remove_space(bars, limit: int = 8):
+def remove_space(bars, limit: int = 10):
     labels = []
     for i, x in enumerate(bars):
         value = 0
