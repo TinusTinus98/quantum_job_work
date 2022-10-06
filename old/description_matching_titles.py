@@ -49,3 +49,5 @@ for query, query_embedding in zip(scrapped, scrapped_embeddings):
     i += 1
 df = pd.DataFrame(res)
 df.to_csv("data/matching_bert/matching_BERT_faiss_onet_title_1.csv")
+
+print(df)

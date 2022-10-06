@@ -12,6 +12,7 @@ jobs_names = pd.read_csv(
 )
 # print(list(jobs_names["job_name"]))
 official = jobs_names
+
 official_embeddings = embedder.encode(list(jobs_names["job_name"]))
 
 

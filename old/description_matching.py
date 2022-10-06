@@ -55,5 +55,6 @@ for query, query_embedding in zip(scrapped_work_activities, scrapped_embeddings)
 df = pd.DataFrame(res)
 df.to_csv("./matching_BERT_faiss_onet_lix_1.csv")
 
+print(df)
 
 print()
