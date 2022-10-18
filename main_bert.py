@@ -8,7 +8,6 @@ name = "matching_3"
 cols = ["job_name", "code"]
 df_official = pd.read_csv("data/data_onetonline/jobs_metadata.csv", usecols=cols)
 
-
 df_to_match = pd.read_csv("data/quantum_jobs_tristan/jobs_metadata.csv")
 # df_to_match=df_to_match["Title", "Description"]
 print(df_to_match.head())

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.transforms import Affine2D
 import mpl_toolkits.axisartist.floating_axes as floating_axes
@@ -17,16 +18,15 @@ def plot_match(df0, col_labels, name_plot,limit=10, min_Y=1):
     plot_bar(df["quantity"], labels, name_plot)
 
 
-def plot_bar(Y, labels, name_plot):
-    fig = plt.figure(figsize=(8, 4))
-    fig.subplots_adjust(bottom=0.3)
-    path_plot = "out/"
+def plot_bar(Y, labels, path_plot,title):
+    fig = plt.figure(figsize=(8, 5))
+    fig.subplots_adjust(bottom=0.4)
     X = [i for i in range(len(Y))]
     plt.bar(X, Y)
     plt.xticks(X, labels)
     plt.xticks(fontsize=8, rotation=90)
-    plt.title("BERT matching")
-    # plt.savefig(path_plot + name_plot, dpi=1200)
+    plt.title(title)
+    # plt.savefig(path_plot, dpi=1200)
 
 
 def set_quantity(df: pd.DataFrame, name_col: str):
@@ -68,3 +68,16 @@ def remove_space(bars, limit: int = 10):
                 value += 1
         labels.append(new_c)
     return labels
+
+def df_quantity(list_in):
+    dico = {}
+    for x in np.unique(np.array(list_in)):
+        dico[x] = 0
+    for x in np.array(list_in):
+        dico[x] += 1
+    out = []
+    for x in dico:
+        out.append({"name": x, "quantity": dico[x]})
+    df = pd.DataFrame(out)
+    df = df.sort_values("quantity", axis=0, ascending=False)
+    return df
