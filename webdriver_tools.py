@@ -55,6 +55,7 @@ def get_text(webdriver: webdriver, xpath: str) -> str:
     else:
         return ""
 
+
 def add_several_elements(webdriver: webdriver, refs: list, storage: dict) -> dict:
     out = storage.copy()
     """search several information from refs in the actual webdriver and store it in storage
@@ -70,7 +71,14 @@ def add_several_elements(webdriver: webdriver, refs: list, storage: dict) -> dic
         dict: previous and new elements
     """
     for ref in refs:
-        out[ref["name"]] = get_text(webdriver, ref["xpath"])
+        if len(ref["xpath"].split("/")) <= 1:
+            content = ref["xpath"]
+        else:
+            try:
+                content = get_text(webdriver, ref["xpath"])
+            except Exception:
+                pass
+        out[ref["name"]] = content
     return out
 
 
@@ -88,7 +96,7 @@ def extract_table(
     for _, column_ref in enumerate(columns_refs):
         content = webdriver.find_elements_by_xpath(column_ref["xpath"])
         for i, x in enumerate(content):
-            if column_ref["name"][:4]=="link":
+            if column_ref["name"][:4] == "link":
                 pre_out[i][column_ref["name"]] = x.get_attribute("href")
             else:
                 pre_out[i][column_ref["name"]] = x.text

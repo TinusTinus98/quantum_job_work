@@ -32,7 +32,7 @@ def webscrap_quantumconsortium():
     df.to_csv("data/consortium/data.csv")
 
 
-def webscrap_pages():
+def webscrap_real_links():
     df = pd.read_csv("data/consortium/metadata.csv")
     links = df["link"]
     out = []
@@ -53,37 +53,32 @@ def webscrap_pages():
     df2.to_csv("data/consortium/metadata_2.csv")
 
 
-# def webscrap_pages_2():
-#     df = pd.read_csv("data/consortium/metadata_2.csv")
-#     links = df["real_link"]
-#     out = []
-#     for i, link in enumerate(links):
-#         driver.get(link)
-#         key = link.split("/")[2]
-#         ref = refs.pages[key]
-#         dico = {}
-#         for col in list(df.columns[1:]):
-#             dico[col] = df[col].iloc[i]
-#         dico = wt.add_several_elements(driver, ref, dico)
-#         dico["real_link"] = driver.current_url
-#         out.append(dico)
-#         if i // 10 / 1 == i / 10:
-#             df2 = pd.DataFrame(out)
-#             df2.to_csv("data/consortium/matadata_3.csv")
-#             print(df2.head())
-#     df2 = pd.DataFrame(out)
-#     df2.to_csv("data/consortium/matadata_3.csv")
+def webscrap_pages():
+    df = pd.read_csv("data/consortium/metadata_2.csv")
+    links = df["real_link"]
+    out = []
+    for i, link in enumerate(links):
+        time.sleep(3)
+        driver.get(link)
+        key = link.split("/")[2]
+        ref = refs.page_by_page[key]
+        dico = {}
+        for col in list(df.columns[1:]):
+            dico[col] = df[col].iloc[i]
+        dico = wt.add_several_elements(driver, ref, dico)
+        dico["key"] = key
+        dico["real_link"] = driver.current_url
+        out.append(dico)
+        if i // 10 / 1 == i / 10:
+            df2 = pd.DataFrame(out)
+            df2.to_csv("data/consortium/metadata_3.csv")
+            print(df2.head())
+    df2 = pd.DataFrame(out)
+    df2.to_csv("data/consortium/metadata_3.csv")
 
 
-df = pd.read_csv("data/consortium/matadata_2.csv")
+df = pd.read_csv("data/consortium/metadata_2.csv")
 r = [x.split("/")[2] for x in df["real_link"]]
 
-df = pt.df_quantity(r)
-df.to_csv("data/consortium/by_website_quantity.csv")
-df = df[df["quantity"] > 5]
-pt.plot_bar(
-    df["quantity"], df["name"], "out/plot_consortium.png", "consortium_extraction"
-)
-plt.show()
-# webscrap_pages()
+webscrap_pages()
 driver.close()
