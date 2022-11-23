@@ -2,6 +2,7 @@ import time
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import Select
 
 
 def clic(webdriver: webdriver, xpath_button: str, y_gap: int = 0) -> None:
@@ -21,6 +22,21 @@ def clic(webdriver: webdriver, xpath_button: str, y_gap: int = 0) -> None:
                 webdriver.execute_script(f"""window.scrollTo({x}, {y})""")
                 time.sleep(1)
                 display_button.click()
+
+
+def change_option(
+    webdriver: webdriver, xpath: str, option: str, y_gap: int = 0
+) -> None:
+    if xpath != "":
+        if check_exists_by_xpath(webdriver, xpath):
+            display_button = webdriver.find_element_by_xpath(xpath)
+            x = display_button.location["x"]
+            y = display_button.location["y"] - y_gap
+            if display_button.is_enabled():
+                webdriver.execute_script(f"""window.scrollTo({x}, {y})""")
+                time.sleep(1)
+                op = Select(webdriver.find_element_by_xpath(xpath))
+                op.select_by_visible_text(option)
 
 
 def check_exists_by_xpath(webdriver: webdriver, xpath: str) -> bool:
@@ -73,12 +89,16 @@ def add_several_elements(webdriver: webdriver, refs: list, storage: dict) -> dic
     for ref in refs:
         if len(ref["xpath"].split("/")) <= 1:
             content = ref["xpath"]
+            out[ref["name"]] = content
+        elif ref["name"] == "cookies":
+            clic(webdriver, ref["xpath"])
         else:
             try:
                 content = get_text(webdriver, ref["xpath"])
             except Exception:
+                content = "error"
                 pass
-        out[ref["name"]] = content
+            out[ref["name"]] = content
     return out
 
 

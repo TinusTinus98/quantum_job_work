@@ -1,3 +1,31 @@
+scholarshipdb=[
+            {
+                "name": "title",
+                "xpath": f"""//*[@id="main"]/div[2]/div[2]/div[2]/div[4]/ul/li[*]/div[1]/h4/a""",
+            },
+            {
+                "name": "company",
+                "xpath": f"""//*[@id="main"]/div[2]/div[2]/div[2]/div[4]/ul/li[*]/div[2]/a[1]""",
+            },
+            {
+                "name": "location",
+                "xpath": f"""//*[@id="main"]/div[2]/div[2]/div[2]/div[4]/ul/li[*]/div[2]/a[2]""",
+            },
+            {
+                "name": "description",
+                "xpath": f"""//*[@id="main"]/div[2]/div[2]/div[2]/div[4]/ul/li[*]/div[3]/p""",
+            },
+            {
+                "name": "date_posted",
+                "xpath": f"""//*[@id="main"]/div[2]/div[2]/div[2]/div[4]/ul/li[*]/div[2]/span""",
+            },
+            {
+                "name": "link",
+                "xpath": f"""//*[@id="main"]/div[2]/div[2]/div[2]/div[4]/ul/li[*]/div[1]/h4/a""",
+            },
+            
+        ],
+
 classic = [
     {
         "name": "metadata",
@@ -28,6 +56,32 @@ classic = [
 ]
 
 page_by_page = {
+    "de.linkedin.com": [
+        {
+            "name": "title",
+            "xpath": f"""/html/body/div[1]/div/section/div[2]/section/div/div[1]/div/a""",
+        },
+        {
+            "name": "location",
+            "xpath": f"""/html/body/div[1]/div/section/div[2]/section/div/div[1]/div/h4/div[1]/span[2]""",
+        },
+        {
+            "name": "company",
+            "xpath": f"""/html/body/div[1]/div/section/div[2]/section/div/div[1]/div/h4/div[1]/span[1]""",
+        },
+        {
+            "name": "position",
+            "xpath": f"""/html/body/div[1]/div/section/div[2]/section/div/div[1]/div/a""",
+        },
+        {
+            "name": "type",
+            "xpath": f"""""",
+        },
+        {
+            "name": "description",
+            "xpath": f"""/html/body/div[1]/div/section/div[2]/div/section[1]/div/div""",
+        },
+    ],
     "www.indeed.com": [
         {
             "name": "title",
@@ -213,9 +267,12 @@ page_by_page = {
         },
     ],
     "careers.honeywell.com": [
+        {"name":"cookies",
+        "xpath":"""//*[@id="onetrust-accept-btn-handler"]"""},
         {
+            
             "name": "title",
-            "xpath": f"""/html/body/div[3]/div/div/div[1]/div[2]/section[1]/div/div/div/div[1]/h1""",
+            "xpath": f"""/html/body/div[3]/div[2]/div/div[1]/div[2]/section[1]/div/div/div/div[1]/h1""",
         },
         {
             "name": "location",
@@ -454,6 +511,8 @@ page_by_page = {
         },
     ],
     "careers.microsoft.com": [
+        {"name":"cookies",
+        "xpath":"""/html/body/section/div/div/div/div[2]/button[1]"""},
         {
             "name": "title",
             "xpath": f"""//*[@id="content-1"]/div[1]/div/h1""",

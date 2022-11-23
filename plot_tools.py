@@ -1,12 +1,15 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.transforms import Affine2D
-import mpl_toolkits.axisartist.floating_axes as floating_axes
-from mpl_toolkits.axisartist.grid_finder import FixedLocator, MaxNLocator, DictFormatter
 
 
-def plot_match(df0, col_labels, name_plot,limit=10, min_Y=1):
+def plot_match(
+    df0: pd.DataFrame,
+    col_labels: list,
+    name_plot: str,
+    limit: int = 10,
+    min_Y: float = 1,
+) -> None:
     df = pd.DataFrame(df0[col_labels])
     list_to_gather = []
     df = set_quantity(df, col_labels)
@@ -18,7 +21,15 @@ def plot_match(df0, col_labels, name_plot,limit=10, min_Y=1):
     plot_bar(df["quantity"], labels, name_plot)
 
 
-def plot_bar(Y, labels, path_plot,title):
+def plot_bar(Y: list, labels: list, title: str, path_plot: str = "") -> None:
+    """plot a bar diagram with Y list and adding labels
+
+    Args:
+        Y (list): list oy y-axis values (bars)
+        labels (list): list of labels for each bar
+        title (str): title of the plot
+        path_plot (str, optional): the path where you want to save your plot. Defaults to "".
+    """
     fig = plt.figure(figsize=(8, 5))
     fig.subplots_adjust(bottom=0.4)
     X = [i for i in range(len(Y))]
@@ -26,10 +37,21 @@ def plot_bar(Y, labels, path_plot,title):
     plt.xticks(X, labels)
     plt.xticks(fontsize=8, rotation=90)
     plt.title(title)
-    # plt.savefig(path_plot, dpi=1200)
+    if path_plot != "":
+        plt.savefig(path_plot, dpi=1200)
 
 
-def set_quantity(df: pd.DataFrame, name_col: str):
+def set_quantity(df: pd.DataFrame, name_col: str, sort: bool = True) -> pd.DataFrame:
+    """Return the dataframe in entry with a added column containing the quantity of each element of the name_column
+
+    Args:
+        df (pd.DataFrame): data
+        name_col (str): the name of the column of the dataframe you want to set quantity
+        sort (bool, optional): True for descending, False for ascending. Defaults to True.
+
+    Returns:
+        pd.DataFrame: return a copy of the original dataframe where a "quantity" column was added
+    """
     res = []
     for code in df[name_col].unique():
         df_code = df[df[name_col] == code]
@@ -38,6 +60,8 @@ def set_quantity(df: pd.DataFrame, name_col: str):
             dic[col_name] = df_code[col_name].iloc[0]
         res.append(dic)
     df = pd.DataFrame(res)
+    if sort:
+        df = df.sort_values("quantity", ascending=False)
     return df
 
 
@@ -68,16 +92,3 @@ def remove_space(bars, limit: int = 10):
                 value += 1
         labels.append(new_c)
     return labels
-
-def df_quantity(list_in):
-    dico = {}
-    for x in np.unique(np.array(list_in)):
-        dico[x] = 0
-    for x in np.array(list_in):
-        dico[x] += 1
-    out = []
-    for x in dico:
-        out.append({"name": x, "quantity": dico[x]})
-    df = pd.DataFrame(out)
-    df = df.sort_values("quantity", axis=0, ascending=False)
-    return df
