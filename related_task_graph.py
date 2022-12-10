@@ -1,4 +1,4 @@
-import matplotlib
+
 import matplotlib.cm as cmx
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt

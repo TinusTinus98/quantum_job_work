@@ -176,7 +176,7 @@ def sort_result(name_file, path_folder=PATH):
 # url = "https://scholarshipdb.net/phd-quantum-scholarships?listed=Last-30-days&page="
 # webscrap_scholarshipdb("phd_quantum_last_30","data/scholarshipdb/",url,max_iter=41)
 
-df = pd.read_csv("data/scholarshipdb/quantum_last_30.csv")
-df=df[df['title'].notna()]
-df.to_csv("data/scholarshipdb/quantum_last_30.csv")
-print(df)
+# df = pd.read_csv("data/scholarshipdb/quantum_last_30.csv")
+# df=df[df['title'].notna()]
+# df.to_csv("data/scholarshipdb/quantum_last_30.csv")
+# print(df)
