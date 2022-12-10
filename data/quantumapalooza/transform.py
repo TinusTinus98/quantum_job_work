@@ -3,6 +3,24 @@ import numpy as np
 
 df = pd.read_excel("data/quantumapalooza/Classeur1.xlsx")
 out = []
+name= [
+    "countRef",
+    "openDate",
+    "employer",
+    "employerType",
+    "jobTitle",
+    "type",
+    "countries",
+]
+dict = {
+    "countRef":[],
+    "openDate":[],
+    "employer":[],
+    "employerType":[],
+    "jobTitle":[],
+    "type":[],
+    "countries":[],
+}
 for i, x in enumerate(df.iloc[:, 0]):
 
     splitted = x.split(" U ")
@@ -42,22 +60,8 @@ for i, x in enumerate(df.iloc[:, 0]):
         sp[1],
         sp[2].split()[0],
     ]
-    if i < 20:
-        print(spout)
-    out.append(spout)
-    name = [
-        "countRef",
-        "openDate",
-        "employer",
-        "employerType",
-        "jobTitle",
-        "type",
-        "countries",
-    ]
-    dict = {}
     for i, n in enumerate(name):
-        dict[n] = spout[i]
-    out.append(dict)
-df = pd.DataFrame.from_dict(out)
+        dict[n].append(spout[i])
+df = pd.DataFrame(dict)
+print(df)
 df.to_csv("data/quantumapalooza/eusnapshot.csv")
-print(out[0])
